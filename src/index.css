@@ -1,0 +1,45 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+html, body{
+    width: 100%;
+    /* height: 100%; */
+    box-sizing:  border-box;
+    overflow-x: hidden;
+    font-family: "Rubik", sans-serif;
+}
+.heroSection_Content{
+    backdrop-filter: blur(8px);
+    text-shadow: 2px 2px 7px black;
+}
+.hero_image_2{
+    background-size: 100%;
+}
+.hero_image_2:hover{
+    background-size: 110%;
+}
+.hero_image_3{
+    background-size: 100%;
+}
+.hero_image_3:hover{
+    background-size: 110%;
+}
+/* Your CSS file */
+.instagram-svg {
+  transition: fill 0.5s;
+  color: white; /* default */
+}
+
+.instagram-hover:hover .instagram-svg {
+  color: url(#instagram-gradient); /* Doesn't work directly, see below! */
+}
+
+/* The trick: switch fill from currentColor to the gradient via a class */
+.instagram-hover .instagram-svg {
+  color: white;
+  fill: currentColor;
+}
+
+.instagram-hover:hover .instagram-svg path {
+  fill: url(#instagram-gradient);
+}
+
