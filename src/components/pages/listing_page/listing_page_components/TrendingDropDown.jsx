@@ -12,8 +12,9 @@ const TrendingDropDown = ({ isDropDown, onClick, className, dropDownTrendingRef 
   }
   
   return (
-    <div ref={dropDownTrendingRef} className="w-full relative">
+    <div  className="w-full relative">
       <button
+      ref={dropDownTrendingRef}
         onClick={onClick}
         className={`${className} trendingBtn w-full font-semibold text-[16px] bg-white flex gap-[50px] justify-between text-nowrap items-center px-[16px] py-[18px] rounded-[16px] cursor-pointer
                     max-lg:gap-4

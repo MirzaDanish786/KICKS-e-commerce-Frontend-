@@ -127,7 +127,7 @@ const MobileFilterScreen = () => {
             text={"Filter by rating"}
             onClick={handleDropDownRating}
             isDropDown={isRating}
-          />
+          /> 
           <div
             className={`${
               isRating ? "block" : "hidden"

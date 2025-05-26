@@ -98,7 +98,7 @@ const HeroSection = () => {
               onClick={() => {
                 swapImages(1);
               }}
-              className="hero_image_2 hover:bg-[length:120%] bg-[#ebeef0]  transition-[background-size] duration-300 ease-in-out w-[160px] h-[160px] border-3 border-[#E7E7E3] rounded-[32px] bg-center bg-no-repeat cursor-pointer 
+              className="hero_image_2 hover:bg-[length:120%]  transition-[background-size] duration-300 ease-in-out w-[160px] h-[160px] border-3 border-[#E7E7E3] rounded-[32px] bg-center bg-no-repeat cursor-pointer 
               max-md:w-30 max-md:h-30 max-md:rounded-[25px]
               max-sm:w-26 max-sm:h-26 max-sm:rounded-[18px]
               max-[500px]:!w-[64px] max-[500px]:!h-[64px] max-[500px]:!rounded-lg max-[500px]:border-1"
@@ -110,7 +110,7 @@ const HeroSection = () => {
               onClick={() => {
                 swapImages(2);
               }}
-              className="hero_image_3 w-[160px] h-[160px] border-3 bg-[#ebeef0]  transition-[background-size] duration-300 ease-in-out border-[#E7E7E3] rounded-[32px]  bg-center  bg-no-repeat cursor-pointer
+              className="hero_image_3 w-[160px] h-[160px] border-3 transition-[background-size] duration-300 ease-in-out border-[#E7E7E3] rounded-[32px]  bg-center  bg-no-repeat cursor-pointer
               max-md:w-30 max-md:h-30 max-md:rounded-[25px]
               max-sm:w-26 max-sm:h-26 max-sm:rounded-[18px]
               max-[500px]:!w-[64px] max-[500px]:!h-[64px] max-[500px]:!rounded-lg max-[500px]:border-1"

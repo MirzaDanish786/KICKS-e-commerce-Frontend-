@@ -13,12 +13,14 @@ html, body{
 }
 .hero_image_2{
     background-size: 100%;
+    backdrop-filter: blur(8px);
 }
 .hero_image_2:hover{
     background-size: 110%;
 }
 .hero_image_3{
     background-size: 100%;
+    backdrop-filter: blur(8px);
 }
 .hero_image_3:hover{
     background-size: 110%;

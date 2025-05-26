@@ -156,7 +156,7 @@ const Footer = () => {
               <ul className="text-[#E7E7E3] flex gap-6 ">
                 <a href="https://www.facebook.com" target="_blank">
                   <li>
-                    <FacebookIcon className=" text-white hover:text-[#1877F2] transition-colors duration-300" />
+                    <FacebookIcon className=" text-white hover:text-[#1877F2]" />
                   </li>
                 </a>
                 <a
@@ -171,12 +171,12 @@ const Footer = () => {
                 </a>
                 <a href="https://www.twitter.com" target="_blank">
                   <li>
-                    <TwitterIcon />
+                    <TwitterIcon className="text-white hover:text-[#1DA1F2]" />
                   </li>
                 </a>
                 <a href="https://www.tiktok.com" target="_blank">
-                  <li>
-                    <TiktokIcon />
+                  <li className="hover:bg-white rounded-full p-0.5">
+                    <TiktokIcon className="text-white hover:text-black" />
                   </li>
                 </a>
               </ul>

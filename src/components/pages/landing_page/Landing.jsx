@@ -16,13 +16,21 @@ const Landing = () => {
   document.title = 'E-commerce Site'
   const dispatch = useDispatch();
   const isLoading = useSelector((state) => state.fetch_API.isLoading);
-  const products = useSelector((state) => state.fetch_API.products);
-  const isError = useSelector((state) => state.fetch_API.isError);
+
   useEffect(() => {
     dispatch(fetchAPI());
     // console.log(products)
     // console.log("Loading",isLoading)
   }, [dispatch]);
+  useEffect(() => {
+    if(isLoading){
+      document.body.style.overflow = 'hidden';
+    }
+    else{
+      document.body.style.overflow = '';
+    }
+  }, [isLoading])
+  
   return (
     <div>
       <ScrollToTopOnDataLoaded isLoading={isLoading}/>

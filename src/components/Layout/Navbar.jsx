@@ -154,7 +154,7 @@ const Navbar = () => {
             </div>
             <div className="divider border border-gray-400 w-full h-0"></div>
 
-            <div onClick={handleNewDropClick} className="newDropsNav text-xl">New Drops🔥</div>
+            <div onClick={handleNewDropClick} className="newDropsNav text-xl max-sm:text-sm">New Drops🔥</div>
 
             <div className="divider border border-gray-400 w-full h-0"></div>
 
@@ -164,7 +164,7 @@ const Navbar = () => {
                   className="hamburgerMenNav flex  items-center gap-2"
                   onClick={toggleMenHamburgerIsDropDown}
                 >
-                  <div className="text-xl">Men</div>
+                  <div className="text-xl  max-sm:text-sm">Men</div>
                   <img
                     className={`hamburgerWomenDropDownImage transition-all duration-150 ${
                       isMenHamburgerDropDown ? "rotate-180" : "rotate-0"
@@ -202,7 +202,7 @@ const Navbar = () => {
                   className="hamburgerWomenNav flex items-center gap-2"
                   onClick={toggleWomenHamburgerIsDropDown}
                 >
-                  <div className="text-xl">Women</div>
+                  <div className="text-xl  max-sm:text-sm">Women</div>
                   <img
                     className={`hamburgerWomenDropDownImage transition-all duration-150 ${
                       isWomenHamburgerDropDown ? "rotate-180" : "rotate-0"
