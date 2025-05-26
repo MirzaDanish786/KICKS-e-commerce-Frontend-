@@ -59,7 +59,7 @@ import TrendingDropDown from "./TrendingDropDown";
     }
   }
 
-  const handleSeeAllSelected = (e)=>{
+  const handleSeeAllSelected = ()=>{
     setIsSellAllSelected(true)
     dispatch(resetSelectedCategories());
   }

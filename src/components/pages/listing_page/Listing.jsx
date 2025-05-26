@@ -26,7 +26,7 @@ const Listing = () => {
   const location = useLocation();
   const initialNewDropRating = location.state?.newDropRating || 0; 
 
-  const [newDropRating, setNewDropRating] = useState(initialNewDropRating); // Local state for newDropRating
+  const [newDropRating, setNewDropRating] = useState(initialNewDropRating);  
   const selectedRating = useSelector((state) => state.fetch_API.selectedRating);
 
   // States for responsive design:
@@ -45,23 +45,23 @@ const Listing = () => {
       selectedCategories.includes(product.category);
 
     const matchesSelectedRating =
-      selectedRating === 0 || // No filtering if selectedRating is 0
+      selectedRating === 0 ||  
       (product.reviews &&
         product.reviews[0] &&
         product.reviews[0].rating >= selectedRating);
 
     const matchesNewDropRating =
-      newDropRating === 0 || // No filtering if newDropRating is 0
+      newDropRating === 0 ||  
       (product.reviews &&
         product.reviews[0] &&
         product.reviews[0].rating >= newDropRating);
 
-    // Apply newDropRating only if it's not reset
+    
     if (newDropRating > 0) {
       return matchesCategory && matchesNewDropRating;
     }
 
-    // Otherwise, apply the other filters
+     
     return matchesCategory && matchesSelectedRating;
   });
 
@@ -106,11 +106,11 @@ const Listing = () => {
   // Reset newDropRating when user interacts with filters
   useEffect(() => {
     if (selectedCategories.length > 0 || selectedRating > 0) {
-      setNewDropRating(0); // Clear newDropRating
+      setNewDropRating(0);  
     }
   }, [selectedCategories, selectedRating]);
 
-  // Handle page range props to make responsive:
+  // Handle page range to make responsive:
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth <= 768) {
@@ -133,7 +133,7 @@ const Listing = () => {
     window.scrollTo(0,0);
     console.log("Scroll is working.")
   }
-  // Navigate and send the state of obj to the product details page and Function to assign the data of the product:
+   
   const handleProductDetailsClick = (proData) => {
     navigate("/product_details", { state: proData });
   };
