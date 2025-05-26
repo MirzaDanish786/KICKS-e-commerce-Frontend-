@@ -22,14 +22,7 @@ const Landing = () => {
     // console.log(products)
     // console.log("Loading",isLoading)
   }, [dispatch]);
-  useEffect(() => {
-    if(isLoading){
-      document.body.style.overflow = 'hidden';
-    }
-    else{
-      document.body.style.overflow = '';
-    }
-  }, [isLoading])
+
   
   return (
     <div>
