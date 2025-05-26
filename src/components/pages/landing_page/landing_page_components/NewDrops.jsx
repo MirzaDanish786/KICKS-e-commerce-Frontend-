@@ -21,7 +21,7 @@ const NewDrops = () => {
     return (
       <div className="newDrops w-[92%] mx-auto my-[90px] flex flex-col items-center">
         <h2 className="text-[24px] font-semibold text-gray-500">
-          No new drops available at the moment.
+          No new drops available.
         </h2>
       </div>
     );

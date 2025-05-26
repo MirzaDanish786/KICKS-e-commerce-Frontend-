@@ -13,6 +13,7 @@ import Reviews from "./landing_page_components/Reviews";
 import ScrollToTopOnDataLoaded from "../../reuseable/ScrollToTopOnDataLoad";
 
 const Landing = () => {
+  document.title = 'E-commerce Site'
   const dispatch = useDispatch();
   const isLoading = useSelector((state) => state.fetch_API.isLoading);
   const products = useSelector((state) => state.fetch_API.products);

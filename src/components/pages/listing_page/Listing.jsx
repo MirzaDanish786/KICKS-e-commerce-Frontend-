@@ -1,7 +1,7 @@
 import DropDownBtn from "./listing_page_components/FilterDropDown";
 import Filter from "./listing_page_components/Filter";
 import TrendingDropDown from "./listing_page_components/TrendingDropDown";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAPI } from "../../../Redux/features/fetchAPI/fetchSlice";
 import Card from "../../reuseable/Card";
@@ -14,8 +14,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import ScrollToTopOnDataLoaded from "../../reuseable/ScrollToTopOnDataLoad";
 
 const Listing = () => {
+  document.title = 'Products Listing'
   const navigate = useNavigate();
   const [isTrending, setIsTrending] = useState(false);
+  const dropDownTrendingRef = useRef(null);
   const isLoading = useSelector((state) => state.fetch_API.isLoading);
   const products = useSelector((state) => state.fetch_API.products);
   const selectedCategories = useSelector(
@@ -75,6 +77,7 @@ const Listing = () => {
 
   const handlePageClick = ({ selected }) => {
     setCurrentPage(selected);
+    handleScroll();
   };
 
   const dispatch = useDispatch();
@@ -85,6 +88,20 @@ const Listing = () => {
   const handleTrendingDropDownClick = () => {
     setIsTrending((prev) => !prev);
   };
+
+  useEffect(() => {
+    const handleTrendingOutsideClick =(e)=>{
+     if(!dropDownTrendingRef.current.contains(e.target)){
+       setIsTrending(false)
+     }
+   }
+   document.addEventListener('click', handleTrendingOutsideClick);
+  
+    return () => {
+      document.removeEventListener('click', handleTrendingOutsideClick);
+    }
+  }, [isTrending])
+  
 
   // Reset newDropRating when user interacts with filters
   useEffect(() => {
@@ -114,11 +131,11 @@ const Listing = () => {
   
   const handleScroll = () => {
     window.scrollTo(0,0);
+    console.log("Scroll is working.")
   }
   // Navigate and send the state of obj to the product details page and Function to assign the data of the product:
   const handleProductDetailsClick = (proData) => {
     navigate("/product_details", { state: proData });
-    handleScroll();
   };
 
   
@@ -141,6 +158,7 @@ const Listing = () => {
           <TrendingDropDown
             onClick={handleTrendingDropDownClick}
             isDropDown={isTrending}
+            dropDownTrendingRef = {dropDownTrendingRef}
           />
         </div>
       </div>

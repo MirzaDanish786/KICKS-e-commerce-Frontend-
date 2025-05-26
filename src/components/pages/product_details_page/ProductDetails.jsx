@@ -10,6 +10,7 @@ import ScrollToTopOnDataLoad from '../../reuseable/ScrollToTopOnDataLoad'
 
 
 const ProductDetails = () => {
+  document.title = 'Product Details'
   const isLoading = useSelector(state => state.fetch_API.isLoading);
   const dispatch = useDispatch();
   const location = useLocation();

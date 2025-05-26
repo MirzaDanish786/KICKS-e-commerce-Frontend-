@@ -1,8 +1,18 @@
 import React from "react";
+import { useRef } from "react";
 import { ReactComponent as DropDownIcon } from "../../../../assets/icons/dropDown.svg";
-const TrendingDropDown = ({ isDropDown, onClick, className }) => {
+import { useDispatch } from "react-redux";
+import { setRating } from "../../../../Redux/features/fetchAPI/fetchSlice";
+const TrendingDropDown = ({ isDropDown, onClick, className, dropDownTrendingRef }) => {
+  const trendBtnTextRef = useRef(null);
+  const dispatch = useDispatch();
+  const handleTrendOptionClick=(e)=>{
+    trendBtnTextRef.current.innerText = e.currentTarget.dataset.trend;
+    dispatch(setRating(e.target.value));
+  }
+  
   return (
-    <div className="w-full relative">
+    <div ref={dropDownTrendingRef} className="w-full relative">
       <button
         onClick={onClick}
         className={`${className} trendingBtn w-full font-semibold text-[16px] bg-white flex gap-[50px] justify-between text-nowrap items-center px-[16px] py-[18px] rounded-[16px] cursor-pointer
@@ -11,6 +21,7 @@ const TrendingDropDown = ({ isDropDown, onClick, className }) => {
                     max-[425px]:gap-3`}
       >
         <div
+        ref={trendBtnTextRef}
           className="trendingBtnText
                         max-lg:text-[15px]"
         >
@@ -21,17 +32,17 @@ const TrendingDropDown = ({ isDropDown, onClick, className }) => {
         </div>
       </button>
 
-      <div className={`${isDropDown? 'block' : 'hidden'} trendingDropDown w-full absolute rounded-[8px] bg-[#eeeeee] py-[10px] border z-30 `}>
-        <ul className="flex flex-col justify-center gap-[5px] w-full">
-          <li className="mostTrending px-[10px] cursor-pointer">
+      <div className={`${isDropDown? 'block' : 'hidden'} trendingDropDown overflow-hidden w-full absolute rounded-[8px] bg-[#eeeeee] border z-30 `}>
+        <ul className="flex flex-col justify-center w-full ">
+          <li value={4} data-trend = "✨Most Trending" className="mostTrending  px-3 py-1 cursor-pointer hover:bg-white " onClick={handleTrendOptionClick}>
             ✨Most Trending
           </li>
-          <div className="divider h-[1px] w-full border"></div>
-          <li className="hotProducts px-[10px] cursor-pointer">
+          <div className="divider h-[1px] border-gray-300 w-full border"></div>
+          <li value={2} data-trend = "🔥Hot Products" className="hotProducts  px-3 py-1 cursor-pointer hover:bg-white " onClick={handleTrendOptionClick}>
             🔥Hot Products
           </li>
-          <div className="divider h-[1px] w-full border"></div>
-          <li className="noneOfAbove px-[17px] cursor-pointer">
+          <div className="divider h-[1px] border-gray-300 w-full border"></div>
+          <li value={0} data-trend = "Trending Options" className="noneOfAbove  px-5 py-1 cursor-pointer hover:bg-white " onClick={handleTrendOptionClick}>
             None of above
           </li>
         </ul>
