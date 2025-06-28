@@ -11,7 +11,7 @@ import NewDrops from "./landing_page_components/NewDrops";
 import Category from "./landing_page_components/Category";
 import Reviews from "./landing_page_components/Reviews";
 import ScrollToTopOnDataLoaded from "../../reuseable/ScrollToTopOnDataLoad";
-
+ 
 const Landing = () => {
   document.title = 'E-commerce Site'
   const dispatch = useDispatch();

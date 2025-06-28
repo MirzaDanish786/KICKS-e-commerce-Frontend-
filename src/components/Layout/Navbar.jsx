@@ -5,11 +5,20 @@ import search from "/src/assets/icons/search.svg";
 import user from "/src/assets/icons/user.svg";
 import { useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
-import { GiHamburgerMenu } from "react-icons/gi";
+import { GiHamburgerMenu, GiWoodenClogs } from "react-icons/gi";
 import { GiCancel } from "react-icons/gi";
 import Overlay from "../reuseable/Overlay";
 import { useDispatch, useSelector } from "react-redux";
-import { resetSelectedCategories, updateSelectedCategories } from "../../Redux/features/fetchAPI/fetchSlice";
+import {
+  resetSelectedCategories,
+  updateSelectedCategories,
+} from "../../Redux/features/fetchAPI/fetchSlice";
+import avatar from "../../assets/images/avatar.png";
+import toast from "react-hot-toast";
+import Loading from "../reuseable/Loading";
+
+
+
 const Navbar = () => {
   const [isMenDropDown, setIsMenDropDown] = useState(false);
   const [isWomenDropDown, setIsWomenDropDown] = useState(false);
@@ -17,11 +26,19 @@ const Navbar = () => {
   const [isWomenHamburgerDropDown, setIsWomenHamburgerDropDown] =
     useState(false);
   const [isHamburgerActive, setIsHamburgerActive] = useState(false);
+  const [isAccountDropDown, setIsAccountDropDown] = useState(false);
+  const accountRef = useRef(null);
+  const [userDp, setUserDp] = useState(null);
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-  const selectedCategories = useSelector(state => state.fetch_API.selectedCategories);
+  const selectedCategories = useSelector(
+    (state) => state.fetch_API.selectedCategories
+  );
   const dispatch = useDispatch();
   const menRef = useRef(null);
   const womenRef = useRef(null);
+
+  const [isLoading, setIsLoading] = useState(false)
 
   const hamburgerRef = useRef(null);
   const hamburgerIconRef = useRef(null);
@@ -29,6 +46,22 @@ const Navbar = () => {
   const handleLogoClick = () => {
     navigate("/");
   };
+
+  // Fetch user profile pic:
+  useEffect(() => {
+    const fetchDp = async () => {
+      setIsLoading(true);
+      let response = await fetch(`${API_BASE_URL}/api/auth/me`, {
+        method: "GET",
+        credentials: "include",
+      });
+      let data = await response.json();
+      setUserDp(data.user.profilePic);
+      setIsLoading(false)
+    };
+    fetchDp();
+  }, []);
+
   // Toggling of the drop down in navbar:
   const toggleMenIsDropDown = () => {
     if (isMenDropDown === false) {
@@ -65,6 +98,10 @@ const Navbar = () => {
     }
   };
 
+  const toggleIsAccountDropDown = () => {
+    setIsAccountDropDown((prev) => !prev);
+  };
+
   // Handle outside click from the drop down:
   useEffect(() => {
     const handleOutsideClick = (e) => {
@@ -72,11 +109,13 @@ const Navbar = () => {
         !menRef.current.contains(e.target) &&
         !womenRef.current.contains(e.target) &&
         !hamburgerRef.current.contains(e.target) &&
-        !hamburgerIconRef.current.contains(e.target)
+        !hamburgerIconRef.current.contains(e.target) &&
+        !accountRef.current.contains(e.target)
       ) {
         setIsMenDropDown(false);
         setIsWomenDropDown(false);
         setIsHamburgerActive(false);
+        setIsAccountDropDown(false);
       }
     };
     document.addEventListener("click", handleOutsideClick);
@@ -107,17 +146,37 @@ const Navbar = () => {
   const handleCategoryClick = (e) => {
     dispatch(resetSelectedCategories());
     dispatch(updateSelectedCategories(e.target.dataset.value));
-    navigate('/listing_page');
-    setIsHamburgerActive(false)
-  }
-  const handleNewDropClick =()=>{
-    navigate('/listing_page', {state: {newDropRating: 4}})
-    setIsHamburgerActive(false)
-  }
-  
+    navigate("/listing_page");
+    setIsHamburgerActive(false);
+  };
+  const handleNewDropClick = () => {
+    navigate("/listing_page", { state: { newDropRating: 4 } });
+    setIsHamburgerActive(false);
+  };
+
+  // Logout code:
+  const handleLogout = async () => {
+    setIsLoading(true)
+    let response = await fetch(`${API_BASE_URL}/api/auth/logout`, {
+      method: "POST",
+      credentials: "include",
+    })
+    let data = await response.json();
+    setIsLoading(false)
+    if(response.ok){
+      toast.success(data.message || 'Successfully Logout');
+    }
+    else{
+      toast.error( data.message || 'Something went wrong!')
+    }
+
+    // Then redirect to login page
+    navigate("/login");
+  };
 
   return (
     <header>
+      {isLoading && <Loading/>}
       {isHamburgerActive && <Overlay />}
       <nav
         className="w-[92%] bg-[#FAFAFA] mx-auto my-8 px-8 py-9 rounded-[24px] font-semibold max-xl:px-10 max-xl:py-6
@@ -145,7 +204,9 @@ const Navbar = () => {
             }`}
           >
             {/* Logo */}
-            <div className="max-md:w-20"><img className="object-contain w-full" src={logo} alt="" /></div>
+            <div className="max-md:w-20">
+              <img className="object-contain w-full" src={logo} alt="" />
+            </div>
             <div
               className="cancelBtn absolute right-5 top-5 p-2 bg-[#eeeeee] rounded-full"
               onClick={handleHamburgerClose}
@@ -154,7 +215,12 @@ const Navbar = () => {
             </div>
             <div className="divider border border-gray-400 w-full h-0"></div>
 
-            <div onClick={handleNewDropClick} className="newDropsNav text-xl max-sm:text-sm">New Drops🔥</div>
+            <div
+              onClick={handleNewDropClick}
+              className="newDropsNav text-xl max-sm:text-sm"
+            >
+              New Drops🔥
+            </div>
 
             <div className="divider border border-gray-400 w-full h-0"></div>
 
@@ -179,14 +245,26 @@ const Navbar = () => {
                   } `}
                 >
                   <ul className="p-2">
-                    <li data-value="mens-shirts" onClick={handleCategoryClick} className="menDropDownList hover:bg-gray-300 px-1 rounded-lg font-medium border-b border-gray-400">
+                    <li
+                      data-value="mens-shirts"
+                      onClick={handleCategoryClick}
+                      className="menDropDownList hover:bg-gray-300 px-1 rounded-lg font-medium border-b border-gray-400"
+                    >
                       Mens Shirts
                     </li>
 
-                    <li data-value="mens-shoes" onClick={handleCategoryClick} className="menDropDownList hover:bg-gray-300 px-1 rounded-lg font-medium border-b border-gray-400">
+                    <li
+                      data-value="mens-shoes"
+                      onClick={handleCategoryClick}
+                      className="menDropDownList hover:bg-gray-300 px-1 rounded-lg font-medium border-b border-gray-400"
+                    >
                       Mens Shoes
                     </li>
-                    <li data-value="mens-watches" onClick={handleCategoryClick} className="menDropDownList hover:bg-gray-300 px-1 rounded-lg font-medium">
+                    <li
+                      data-value="mens-watches"
+                      onClick={handleCategoryClick}
+                      className="menDropDownList hover:bg-gray-300 px-1 rounded-lg font-medium"
+                    >
                       Mens Watches
                     </li>
                   </ul>
@@ -218,19 +296,39 @@ const Navbar = () => {
                   }`}
                 >
                   <ul>
-                    <li data-value="womens-bags" onClick={handleCategoryClick} className="womenDropDownList hover:bg-gray-300 px-1 rounded-lg font-medium border-b border-gray-400">
+                    <li
+                      data-value="womens-bags"
+                      onClick={handleCategoryClick}
+                      className="womenDropDownList hover:bg-gray-300 px-1 rounded-lg font-medium border-b border-gray-400"
+                    >
                       Womens Bags
                     </li>
-                    <li data-value="womens-dresses" onClick={handleCategoryClick} className="womenDropDownList hover:bg-gray-300 px-1 rounded-lg font-medium border-b border-gray-400">
+                    <li
+                      data-value="womens-dresses"
+                      onClick={handleCategoryClick}
+                      className="womenDropDownList hover:bg-gray-300 px-1 rounded-lg font-medium border-b border-gray-400"
+                    >
                       Womens Dresses
                     </li>
-                    <li data-value="womens-jewellery" onClick={handleCategoryClick} className="womenDropDownList hover:bg-gray-300 px-1 rounded-lg font-medium border-b border-gray-400">
+                    <li
+                      data-value="womens-jewellery"
+                      onClick={handleCategoryClick}
+                      className="womenDropDownList hover:bg-gray-300 px-1 rounded-lg font-medium border-b border-gray-400"
+                    >
                       Womens Jewellery
                     </li>
-                    <li data-value="womens-shoes" onClick={handleCategoryClick} className="womenDropDownList hover:bg-gray-300 px-1 rounded-lg font-medium border-b border-gray-400">
+                    <li
+                      data-value="womens-shoes"
+                      onClick={handleCategoryClick}
+                      className="womenDropDownList hover:bg-gray-300 px-1 rounded-lg font-medium border-b border-gray-400"
+                    >
                       Womens Shoes
                     </li>
-                    <li data-value="womens-watches" onClick={handleCategoryClick} className="womenDropDownList hover:bg-gray-300 px-1 rounded-lg font-medium border-b border-gray-400 ">
+                    <li
+                      data-value="womens-watches"
+                      onClick={handleCategoryClick}
+                      className="womenDropDownList hover:bg-gray-300 px-1 rounded-lg font-medium border-b border-gray-400 "
+                    >
                       Womens Watches
                     </li>
                   </ul>
@@ -247,7 +345,9 @@ const Navbar = () => {
                 className="flex items-center gap-10
               max-lg:gap-3 max-lg:text-[13px]"
               >
-                <li onClick={handleNewDropClick} className="cursor-pointer">New Drops🔥</li>
+                <li onClick={handleNewDropClick} className="cursor-pointer">
+                  New Drops🔥
+                </li>
                 <li>
                   <div
                     ref={menRef}
@@ -257,7 +357,9 @@ const Navbar = () => {
                     <div>Men</div>
                     <div>
                       <img
-                        className={`transition-all duration-150 ${isMenDropDown ? "rotate-180" : "rotate-0"}`}
+                        className={`transition-all duration-150 ${
+                          isMenDropDown ? "rotate-180" : "rotate-0"
+                        }`}
                         src={downArrow}
                         alt=""
                       />
@@ -271,13 +373,25 @@ const Navbar = () => {
                     } `}
                   >
                     <ul className="p-1">
-                      <li data-value="mens-shirts" onClick={handleCategoryClick} className="menDropDownList hover:bg-gray-300 px-1 rounded-sm p-1 font-medium">
+                      <li
+                        data-value="mens-shirts"
+                        onClick={handleCategoryClick}
+                        className="menDropDownList hover:bg-gray-300 px-1 rounded-sm p-1 font-medium"
+                      >
                         Mens Shirts
                       </li>
-                      <li data-value="mens-shoes" onClick={handleCategoryClick} className="menDropDownList hover:bg-gray-300 px-1 rounded-sm p-1 font-medium">
+                      <li
+                        data-value="mens-shoes"
+                        onClick={handleCategoryClick}
+                        className="menDropDownList hover:bg-gray-300 px-1 rounded-sm p-1 font-medium"
+                      >
                         Mens Shoes
                       </li>
-                      <li data-value="mens-watches" onClick={handleCategoryClick} className="menDropDownList hover:bg-gray-300 px-1 rounded-sm p-1 font-medium">
+                      <li
+                        data-value="mens-watches"
+                        onClick={handleCategoryClick}
+                        className="menDropDownList hover:bg-gray-300 px-1 rounded-sm p-1 font-medium"
+                      >
                         Mens Watches
                       </li>
                     </ul>
@@ -292,7 +406,9 @@ const Navbar = () => {
                     <div>Women</div>
                     <div>
                       <img
-                        className={`transition-all duration-150 ${isWomenDropDown ? "rotate-180" : "rotate-0"}`}
+                        className={`transition-all duration-150 ${
+                          isWomenDropDown ? "rotate-180" : "rotate-0"
+                        }`}
                         src={downArrow}
                         alt=""
                       />
@@ -305,19 +421,39 @@ const Navbar = () => {
                       }`}
                     >
                       <ul className="p-1">
-                        <li onClick={handleCategoryClick} data-value="womens-bags" className="womenDropDownList hover:bg-gray-300 px-1 rounded-sm p-1 font-medium">
+                        <li
+                          onClick={handleCategoryClick}
+                          data-value="womens-bags"
+                          className="womenDropDownList hover:bg-gray-300 px-1 rounded-sm p-1 font-medium"
+                        >
                           Womens Bags
                         </li>
-                        <li onClick={handleCategoryClick} data-value="womens-dresses" className="womenDropDownList hover:bg-gray-300 px-1 rounded-sm p-1 font-medium">
+                        <li
+                          onClick={handleCategoryClick}
+                          data-value="womens-dresses"
+                          className="womenDropDownList hover:bg-gray-300 px-1 rounded-sm p-1 font-medium"
+                        >
                           Womens Dresses
                         </li>
-                        <li onClick={handleCategoryClick} data-value="womens-jewellery" className="womenDropDownList hover:bg-gray-300 px-1 rounded-sm p-1 font-medium">
+                        <li
+                          onClick={handleCategoryClick}
+                          data-value="womens-jewellery"
+                          className="womenDropDownList hover:bg-gray-300 px-1 rounded-sm p-1 font-medium"
+                        >
                           Womens Jewellery
                         </li>
-                        <li onClick={handleCategoryClick} data-value="womens-shoes" className="womenDropDownList hover:bg-gray-300 px-1 rounded-sm p-1 font-medium">
+                        <li
+                          onClick={handleCategoryClick}
+                          data-value="womens-shoes"
+                          className="womenDropDownList hover:bg-gray-300 px-1 rounded-sm p-1 font-medium"
+                        >
                           Womens Shoes
                         </li>
-                        <li onClick={handleCategoryClick} data-value="womens-watches" className="womenDropDownList hover:bg-gray-300 px-1 rounded-sm p-1 font-medium">
+                        <li
+                          onClick={handleCategoryClick}
+                          data-value="womens-watches"
+                          className="womenDropDownList hover:bg-gray-300 px-1 rounded-sm p-1 font-medium"
+                        >
                           Womens Watches
                         </li>
                       </ul>
@@ -348,8 +484,34 @@ const Navbar = () => {
             <div className=" max-sm:w-4">
               <img className="w-full object-contain" src={user} alt="" />
             </div>
-            <div className="px-3 py-1 rounded-full bg-[#FFA52F] max-sm:px-2 max-sm:py-0">
-              0
+
+            <div ref={accountRef} className="relative">
+              <div
+                className="w-10 h-10 overflow-hidden rounded-full bg-gray-00 cursor-pointer max-sm:px-2 max-sm:py-0"
+                onClick={toggleIsAccountDropDown}
+              >
+                {userDp ? (
+                  <img
+                    src={`${API_BASE_URL}/uploads/${userDp}`}
+                    alt="userDp"
+                  />
+                ) : (
+                  <img src={avatar} alt="userDp" />
+                )}
+              </div>
+              {/* accountDropDown */}
+              <div
+                className={`${
+                  isAccountDropDown ? "flex" : "hidden"
+                } absolute py-2 bottom rounded-lg  bg-gray-300`}
+              >
+                <div
+                  onClick={handleLogout}
+                  className="px-2 cursor-pointer hover:bg-gray-200"
+                >
+                  <div className="text-nowrap">Log out</div>
+                </div>
+              </div>
             </div>
           </li>
         </ul>
