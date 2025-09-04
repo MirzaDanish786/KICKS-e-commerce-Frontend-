@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, Link, data } from "react-router-dom";
 import useRedirectIfAuthenticated from "../../../hooks/useRedirectIfAuthenticated";
 import Logo from "../../../assets/images/Logo.png";
 import toast from 'react-hot-toast';
 import Loading from "../../reuseable/Loading";
+import { useSearchParams } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -12,7 +13,17 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate();
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
-
+  const [searchParams] = useSearchParams()
+  const isEmailUpdated = searchParams.get('emailUpdated');
+  const newEmail = searchParams.get('newEmail');
+  
+  useEffect(() => {
+  if (isEmailUpdated === "true" && newEmail) {
+    setEmail(newEmail); // Pre-fill the email field
+    toast.success("Email successfully changed!");
+  }
+}, [isEmailUpdated, newEmail]);
+  
   useRedirectIfAuthenticated();
 
   const login = async (email, password) => {

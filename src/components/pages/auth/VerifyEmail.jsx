@@ -81,7 +81,7 @@ export default function VerifyEmail({ onSubmit, loading }) {
     setError("");
     onSubmit && onSubmit(otp.join(""));
   };
-
+ 
   return (
     <div className="max-w-md mx-auto p-6 bg-white rounded-md shadow-lg">
       {isLoading && <Loading/>}

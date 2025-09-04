@@ -108,11 +108,12 @@ const HandleResetOrVerifyOtp = () => {
       if (isVerifyEmail.ok) {
         await sendResetPasswordOTPEmail();
         navigate("/verify-reset-otp");
-      }
+      } 
       else{
         toast.error('Please verify your account first!')
-        await sendVerifyEmailOTP()
+
         navigate('/verify-email')
+        await sendVerifyEmailOTP()
       }
 
     } catch (error) {

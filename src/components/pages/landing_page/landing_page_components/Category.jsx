@@ -89,7 +89,7 @@ const Category = () => {
               onSlideChange={() => console.log("slide change")}
               onSwiper={(swiper) => (swiperRef.current = swiper)}
             >
-              {catData.categoryArray.map((cat, index) => (
+              {catData?.categoryArray?.map((cat, index) => (
                 <SwiperSlide key={index}>
                   <CategoryCard
                     image={catData.categoryImagesArray[index]}

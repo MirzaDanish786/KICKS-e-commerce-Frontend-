@@ -3,19 +3,22 @@ import { useNavigate, Outlet } from "react-router-dom";
 
 const ProtectedRoute = () => {
   const navigate = useNavigate();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  // I assign isAuthenticated = true tempory to access all routes;
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
 
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await fetch("http://localhost:3000/api/auth/me", {
+        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/me`, {
           method: "GET",
           credentials: "include",
         });
 
         if (res.ok) {
           setIsAuthenticated(true);
-        } else {
+        } 
+        else {
           navigate("/login");
         }
       } catch (error) {
